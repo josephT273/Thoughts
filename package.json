@@ -2,7 +2,9 @@
   "name": "Thoughts",
   "type": "module",
   "scripts": {
-    "dev": "tsx watch src/index.ts"
+    "dev": "tsx watch src/index.ts",
+    "build": "npm install && npm install --prefix frontend && npm run build --prefix frontend",
+    "start": "NODE_ENV=production tsx watch src/index.ts"
   },
   "dependencies": {
     "@hono/node-server": "^1.13.2",
@@ -13,6 +15,7 @@
   },
   "devDependencies": {
     "@types/node": "^20.11.17",
+    "concurrently": "^9.0.1",
     "tsx": "^4.7.1"
   }
 }
