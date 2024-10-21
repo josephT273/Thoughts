@@ -13,7 +13,10 @@ app.get("/", (c) => {
   return c.text("Hello Hono!");
 });
 
-app.use('/*', cors());
+app.use('/*', cors({
+  origin: '*',
+  allowMethods: ['GET', 'POST', 'PUT', 'DELETE'],
+}));
 
 app.post("/api/v1/note", async (c) => {
   const { note, displayName } = await c.req.json();
