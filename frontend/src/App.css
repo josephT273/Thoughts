@@ -1,3 +1,7 @@
+:root{
+  --card-color: rgb(25, 25, 25);
+}
+
 #root {
   width: 100%;
   margin: 0 auto;
@@ -32,4 +36,17 @@
 
 .textArea:hover {
   border-color: #646cff;
+}
+
+
+#cards {
+  display: grid;
+  gap: 1em;
+  grid-template-columns: repeat(3, 1fr);
+  max-width: 1000px;
+  padding: 1em 0em;
+  place-self: center;
+  position: relative;
+  width: calc(100% - 2em);
+  z-index: 2;
 }
