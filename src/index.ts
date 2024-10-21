@@ -53,7 +53,7 @@ app.onError((err, c) => {
   return c.text("Custom Error Message", 500);
 });
 
-const port = 8081 || Number.parseInt(process.env.PORT!);
+const port = Number.parseInt(process.env.PORT!);
 console.log(`Server is running on port ${port}`);
 
 db.on("error", console.error.bind(console, "Mongodb Error: "));
