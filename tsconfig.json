@@ -1,14 +1,18 @@
 {
   "compilerOptions": {
-    "target": "ESNext",
-    "module": "NodeNext",
-    "strict": true,
-    "verbatimModuleSyntax": true,
-    "skipLibCheck": true,
+    "target": "ESNext",                 // Latest ECMAScript features
+    "module": "NodeNext",               // Supports ES Modules in Node.js (important for `import`/`export`)
+    "strict": true,                     // Enables strict type checking options
+    "verbatimModuleSyntax": true,       // Ensures import/export statements remain unchanged
+    "skipLibCheck": true,               // Skips type checks for declaration files (.d.ts)
     "types": [
-      "node"
+      "node"                            // Loads types for Node.js
     ],
-    "jsx": "react-jsx",
-    "jsxImportSource": "hono/jsx",
-  }
+    "jsx": "react-jsx",                 // Uses React JSX syntax
+    "jsxImportSource": "hono/jsx",      // Allows Hono to use JSX
+    "outDir": "./dist",                 // Compiles the TypeScript files into the dist folder
+    "esModuleInterop": true             // Allows default imports for CommonJS modules
+  },
+  "include": ["src"],                   // Include all files in the src folder for compilation
+  "exclude": ["node_modules"]           // Exclude node_modules from compilation
 }
