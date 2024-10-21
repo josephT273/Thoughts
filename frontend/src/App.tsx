@@ -4,10 +4,9 @@ import Note from './components/Note'
 import axios from 'axios';
 
 interface DataType {
-  __id: string,
+  _id: string,
   note: string,
   displayName: string,
-  createdAt: string
 }
 const apiUrl = import.meta.env.VITE_API_URL;
 
@@ -18,23 +17,35 @@ function App() {
   const [data, setData] = useState<DataType[]>([]);
 
   const handlePost = async() => {
-    const n = {
-      note, displayName
+    if (!note.trim()) {
+      alert("Note cannot be empty");
+      return;
     }
-    await axios.post(apiUrl+"/api/v1/note", n);
+
+    const noteData = {
+      note: note.trim(),
+      displayName: displayName.trim() || "Anonymous"
+    }
+    await axios.post(apiUrl+"/api/v1/note", noteData);
+    setNote("");
     fetchNotes()
   }
   const fetchNotes = async () => {
-    await axios.get(apiUrl+"/api/v1/note").then(res=> {
-      setData(res.data.data)
-    }).catch(e => console.log(e));
+    await axios.get(apiUrl+"/api/v1/note")
+      .then((res) => {
+        setData(res.data.data);
+        console.log(data)
+      }).catch(
+        e => console.error(e)
+      );
   };
 
   useEffect(()=> {
     fetchNotes();
   }, []);
 
-  console.log(data)
+  console.log(data);
+
 
   return (
     <div className='homePage'>
@@ -43,7 +54,7 @@ function App() {
       </div>
 
       <div className='postArea'>
-        <textarea rows={5} className='textArea link' placeholder='Write note max allowed character is 200' maxLength={200} onChange={(e) => setNote(e.target.value)}>{note}</textarea>
+        <textarea rows={5} className='textArea link' value={note} placeholder='Write note max allowed character is 200' maxLength={200} onChange={(e) => setNote(e.target.value)}>{note}</textarea>
         <input type="text" placeholder='Display Name' className='link' onChange={(e) => setDisplayName(e.target.value)} value={displayName} />
         <div>
           <button className='postButton link' onClick={handlePost}>Post</button>
@@ -51,7 +62,7 @@ function App() {
       </div>
       <div id='cards'>
         {data.map((res) => (
-          <Note content={res.note} displayName={res.displayName} key={res.__id}/> 
+          <Note key={res._id} content={res.note} displayName={res.displayName}/>
         ))}
       </div>
     </div>
