@@ -14,6 +14,7 @@
 }
 .postArea
 {
+  background: linear-gradient(rgba(14, 14, 14, 0.479), rgba(166, 166, 255, 0.384));
   padding: 10px;
   margin: 0 auto;
   display: block;

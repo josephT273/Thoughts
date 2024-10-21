@@ -9,7 +9,7 @@ const Note = ({content, displayName} : NoteType) => {
         <div className='card'>
             <div className='card-content'>
                 <h4>{content}</h4>
-                <span>{displayName}</span>
+                <span className='card-text'>{displayName}</span>
             </div>
         </div>
     )

@@ -1,7 +1,40 @@
+import { useEffect, useState } from 'react'
 import './App.css'
 import Note from './components/Note'
+import axios from 'axios';
+
+interface DataType {
+  __id: string,
+  note: string,
+  displayName: string,
+  createdAt: string
+}
+const apiUrl = import.meta.env.VITE_API_URL;
 
 function App() {
+
+  const [note, setNote] = useState("");
+  const [displayName, setDisplayName] = useState("Anonymous");
+  const [data, setData] = useState<DataType[]>([]);
+
+  const handlePost = async() => {
+    const n = {
+      note, displayName
+    }
+    await axios.post(apiUrl+"/api/v1/note", n);
+    fetchNotes()
+  }
+  const fetchNotes = async () => {
+    await axios.get(apiUrl+"/api/v1/note").then(res=> {
+      setData(res.data.data)
+    }).catch(e => console.log(e));
+  };
+
+  useEffect(()=> {
+    fetchNotes();
+  }, []);
+
+  console.log(data)
 
   return (
     <div className='homePage'>
@@ -10,16 +43,16 @@ function App() {
       </div>
 
       <div className='postArea'>
-        <textarea rows={5} className='textArea link' placeholder='Write note max allowed character is 200' maxLength={200}></textarea>
-        <input type="text" placeholder='Display Name' className='link' />
+        <textarea rows={5} className='textArea link' placeholder='Write note max allowed character is 200' maxLength={200} onChange={(e) => setNote(e.target.value)}>{note}</textarea>
+        <input type="text" placeholder='Display Name' className='link' onChange={(e) => setDisplayName(e.target.value)} value={displayName} />
         <div>
-          <button className='postButton link'>Post</button>
+          <button className='postButton link' onClick={handlePost}>Post</button>
         </div>
       </div>
       <div id='cards'>
-        <Note content="Hello World" displayName="Someone"/>
-        <Note content="Hello World" displayName="Someone"/>
-        <Note content="Hello World" displayName="Someone"/>
+        {data.map((res) => (
+          <Note content={res.note} displayName={res.displayName} key={res.__id}/> 
+        ))}
       </div>
     </div>
   )

@@ -3,6 +3,7 @@ import { Hono } from "hono";
 import "dotenv/config";
 import database from "./config/database.js";
 import Notes from "./model/NotesModal.js";
+import {cors} from 'hono/cors'
 
 const db = database();
 
@@ -11,6 +12,8 @@ const app = new Hono();
 app.get("/", (c) => {
   return c.text("Hello Hono!");
 });
+
+app.use('/*', cors());
 
 app.post("/api/v1/note", async (c) => {
   const { note, displayName } = await c.req.json();
@@ -33,7 +36,7 @@ app.post("/api/v1/note", async (c) => {
 });
 
 app.get("/api/v1/note", async (c) => {
-  const n = await Notes.find({}).select("-__v");
+  const n = await Notes.find({}).select("-__v").sort({createdAt: -1});
 
   return c.json({
     success: true,
