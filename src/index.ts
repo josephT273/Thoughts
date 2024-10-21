@@ -1,68 +1,64 @@
-import { serve } from '@hono/node-server'
-import { Hono } from 'hono'
-import 'dotenv/config';
-import database from './config/database.js';
-import Notes from './model/NotesModal.js'
+import { serve } from "@hono/node-server";
+import { Hono } from "hono";
+import "dotenv/config";
+import database from "./config/database.js";
+import Notes from "./model/NotesModal.js";
 
 const db = database();
 
-const app = new Hono()
+const app = new Hono();
 
-app.get('/', (c) => {
-  return c.text('Hello Hono!')
-})
+app.get("/", (c) => {
+  return c.text("Hello Hono!");
+});
 
+app.post("/api/v1/note", async (c) => {
+  const { note, displayName } = await c.req.json();
 
-app.post('/api/v1/note', async(c) => {
-  const {note, displayName} = await c.req.json();
-
-  if(!note) return c.json({
-    success: false,
-    message: "You have to write text on the note"
-  })
+  if (!note)
+    return c.json({
+      success: false,
+      message: "You have to write text on the note",
+    });
 
   const n = await Notes.create({
     note,
-    displayName
+    displayName,
   });
 
   return c.json({
     success: true,
     message: "Note Saved successfully",
-  })
-})
+  });
+});
 
-app.get('/api/v1/note', async(c) => {
-
-  const n = await Notes.find({}).select("-__v");;
+app.get("/api/v1/note", async (c) => {
+  const n = await Notes.find({}).select("-__v");
 
   return c.json({
     success: true,
     data: n,
-  })
-})
+  });
+});
 
 app.notFound((c) => {
-  return c.text('Custom 404 Message', 404)
-})
+  return c.text("Custom 404 Message", 404);
+});
 
 app.onError((err, c) => {
-  console.error(`${err}`)
-  return c.text('Custom Error Message', 500)
-})
+  console.error(`${err}`);
+  return c.text("Custom Error Message", 500);
+});
 
-const port = 8081 || Number.parseInt(process.env.PORT!)
-console.log(`Server is running on port ${port}`)
+const port = 8081 || Number.parseInt(process.env.PORT!);
+console.log(`Server is running on port ${port}`);
 
-db.on("error", console.error.bind(console, "Mongodb Error: "))
+db.on("error", console.error.bind(console, "Mongodb Error: "));
 db.on("open", () => {
   console.info("Database is connected");
   serve({
     fetch: app.fetch,
-    port
+    port,
   });
-  console.info(
-      "⚙️ App running on the port http://localhost:%d",
-      port
-    )
+  console.info("⚙️ App running on the port http://localhost:%d", port);
 });
